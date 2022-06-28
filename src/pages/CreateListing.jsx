@@ -6,6 +6,7 @@ import {useNavigate} from 'react-router-dom'
 import Spinner from '../components/Spinner'
 import {toast} from 'react-toastify'
 import {v4 as uuidv4} from 'uuid'
+import {addDoc, collection, serverTimestamp} from 'firebase/firestore'
 
 function CreateListing() {
 
@@ -67,6 +68,7 @@ function CreateListing() {
 
     const onSubmit = async (e) => {
         e.preventDefault()
+
         setLoading(true)
 
         if (discountedPrice >= regularPrice) {
@@ -155,9 +157,26 @@ function CreateListing() {
             toast.error('Error while uploading images')
         })
         
-        console.log(imgUrls)
+        const formDataCopy = {
+            ...formData,
+            imgUrls,
+            geolocation,
+            timestamp: serverTimestamp()
+        }
 
+        delete formDataCopy.images
+        delete formDataCopy.address
+        location && (formDataCopy.location = location)
+        !formDataCopy.offer && delete formDataCopy.discountedPrice
+
+        console.log(formDataCopy)
+
+        const docRef  = await addDoc(collection(db, 'listings'), formDataCopy)
+        console.log(formDataCopy)
         setLoading(false)
+        toast.success('Listing saved')
+        console.log(`/category/${formDataCopy.type}/${docRef.id}`)
+        navigate(`/category/${formDataCopy.type}/${docRef.id}`)
 
     }
 
