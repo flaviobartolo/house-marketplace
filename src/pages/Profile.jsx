@@ -7,6 +7,9 @@ import {toast} from 'react-toastify'
 import {useState} from 'react'
 import {useNavigate, Link} from 'react-router-dom'
 
+import arrowRight from '../assets/svg/keyboardArrowRightIcon.svg'
+import homeIcon from '../assets/svg/homeIcon.svg'
+
 function Profile() {
     const auth = getAuth()
 
@@ -76,6 +79,11 @@ function Profile() {
                     <input type="text" id="email" className='profileEmail' disabled={true} value={email} />
                 </form>
             </div>
+            <Link to='/create-listing' className='createListing'>
+                <img src={homeIcon} alt="home" />
+                <p>Sell or rent your home</p>
+                <img src={arrowRight} alt="arrow right" />
+            </Link>
         </main>
     </div>
     //return user ? <h1>{user.displayName}</h1> : 'Not Logged In'
